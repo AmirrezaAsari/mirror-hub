@@ -16,3 +16,51 @@ model User {
 
   @@map("users")
 }
+
+model MirrorManager {
+  id        String   @id @default(uuid())
+  name      String
+  type      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  mirrors Mirror[]
+  reports Report[]
+}
+
+model Mirror {
+  id        String   @id @default(uuid())
+  name      String
+  baseUrl   String
+  isActive  Boolean  @default(true)
+  mirrorManagerId String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  mirrorManager MirrorManager @relation(fields: [mirrorManagerId], references: [id])
+  scanResults ScanResult[]
+}
+
+model ScanResult {
+  id        String   @id @default(uuid())
+  mirrorId  String
+  responseTimeMs Int
+  statusCode Int
+  isAvailable Boolean @default(true)
+  packageSizeBytes Int
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  mirror Mirror @relation(fields: [mirrorId], references: [id])
+}
+
+
+model Report {
+  id        String   @id @default(uuid())
+  mirrorManagerId String
+  generatedAt DateTime @default(now()) @map("generated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  MirrorManager MirrorManager @relation(fields: [mirrorManagerId], references: [id])
+}
