@@ -22,4 +22,11 @@ export const teamMembers: TeamMember[] = [
     linkedin: 'https://linkedin.com/in/example',
     initials: '',
   },
+  {
+    id: '4',
+    name: 'محسن قالیباف',
+    role: 'مهندس فرانت اند',
+    linkedin: 'https://linkedin.com/in/example',
+    initials: '',
+  },
 ];
