@@ -28,10 +28,10 @@ make up
 The full stack will be available at:
 
 - **Frontend:** http://localhost:3001
-- **Backend API:** http://localhost:3002
-- **Health check:** http://localhost:3002/health
-- **Swagger docs:** http://localhost:3002/api/docs
-- **Queue dashboard:** http://localhost:3002/admin/queues
+- **Backend API:** http://localhost:3000
+- **Health check:** http://localhost:3000/health
+- **Swagger docs:** http://localhost:3000/api/docs
+- **Queue dashboard:** http://localhost:3000/admin/queues
 
 On startup, the backend automatically runs migrations and seeds sample mirrors from `prisma/seed.js` (idempotent — safe on every `docker compose up`).
 
