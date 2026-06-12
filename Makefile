@@ -1,4 +1,4 @@
-.PHONY: up down build logs restart clean shell migrate dev install lint format test
+.PHONY: up down build logs restart clean shell migrate dev install lint format test frontend-dev frontend-install frontend-logs help
 
 COMPOSE := docker compose
 
@@ -11,8 +11,11 @@ down: ## Stop and remove containers
 build: ## Build Docker images
 	$(COMPOSE) build
 
-logs: ## Follow application logs
-	$(COMPOSE) logs -f app
+logs: ## Follow backend logs
+	$(COMPOSE) logs -f backend
+
+frontend-logs: ## Follow frontend logs
+	$(COMPOSE) logs -f frontend
 
 restart: ## Restart all services
 	$(COMPOSE) restart
@@ -20,26 +23,35 @@ restart: ## Restart all services
 clean: ## Stop containers and remove volumes
 	$(COMPOSE) down -v
 
-shell: ## Open a shell in the app container
-	$(COMPOSE) exec app sh
+shell: ## Open a shell in the backend container
+	$(COMPOSE) exec backend sh
 
-migrate: ## Run Prisma migrations in the app container
-	$(COMPOSE) exec app npx prisma migrate deploy
+migrate: ## Run Prisma migrations in the backend container
+	$(COMPOSE) exec backend npx prisma migrate deploy
 
-dev: ## Start the app locally in development mode
+seed: ## Run database seed in the backend container
+	$(COMPOSE) exec backend npx prisma db seed
+
+dev: ## Start the backend locally in development mode
 	npm run start:dev
 
-install: ## Install npm dependencies
+frontend-dev: ## Start the frontend locally in development mode
+	cd ui && npm run dev
+
+install: ## Install backend npm dependencies
 	npm install
 
-lint: ## Run ESLint
+frontend-install: ## Install frontend npm dependencies
+	cd ui && npm install
+
+lint: ## Run backend ESLint
 	npm run lint
 
-format: ## Format code with Prettier
+format: ## Format backend code with Prettier
 	npm run format
 
-test: ## Run unit tests
+test: ## Run backend unit tests
 	npm run test
 
 help: ## Show available commands
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-18s\033[0m %s\n", $$1, $$2}'

@@ -54,6 +54,33 @@ export class MirrorRepository {
     });
   }
 
+  findAllActive(): Promise<Mirror[]> {
+    return this.prisma.mirror.findMany({
+      where: {
+        isActive: true,
+        deletedAt: null,
+      },
+      orderBy: { createdAt: 'asc' },
+    });
+  }
+
+  findAllActiveByManagerType(managerType: string): Promise<Mirror[]> {
+    return this.prisma.mirror.findMany({
+      where: {
+        isActive: true,
+        deletedAt: null,
+        mirrorManager: {
+          type: managerType,
+          deletedAt: null,
+        },
+      },
+      include: {
+        mirrorManager: true,
+      },
+      orderBy: { name: 'asc' },
+    });
+  }
+
   private buildWhereClause(
     params: Omit<MirrorFindManyParams, 'skip' | 'take'>,
   ): Prisma.MirrorWhereInput {

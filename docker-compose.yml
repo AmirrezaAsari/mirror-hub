@@ -18,22 +18,40 @@ services:
       retries: 10
       start_period: 10s
 
-  app:
+  redis:
+    image: redis:7-alpine
+    container_name: mirror-hub-redis
+    restart: unless-stopped
+    ports:
+      - '${REDIS_PORT:-6379}:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+  backend:
     build:
       context: .
       dockerfile: Dockerfile
       target: production
-    container_name: mirror-hub-app
+    container_name: mirror-hub-backend
     restart: unless-stopped
     depends_on:
       postgres:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     environment:
       NODE_ENV: production
       PORT: 3000
       DATABASE_URL: postgresql://${POSTGRES_USER:-mirror}:${POSTGRES_PASSWORD:-mirror_secret}@postgres:5432/${POSTGRES_DB:-mirror_hub}?schema=public
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      CORS_ORIGIN: http://localhost:3001
     ports:
-      - '${APP_PORT:-3000}:3000'
+      - '${APP_PORT:-3002}:3000'
     healthcheck:
       test:
         [
@@ -41,6 +59,37 @@ services:
           'node',
           '-e',
           "fetch('http://localhost:3000/health').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  frontend:
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:3000
+    container_name: mirror-hub-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      NEXT_PUBLIC_API_URL: http://localhost:3000
+      API_INTERNAL_URL: http://backend:3000
+    ports:
+      - '${FRONTEND_PORT:-3001}:3000'
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://localhost:3000').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))",
         ]
       interval: 10s
       timeout: 5s

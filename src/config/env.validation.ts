@@ -1,5 +1,14 @@
 import { plainToInstance } from 'class-transformer';
-import { IsEnum, IsInt, IsNotEmpty, IsString, Max, Min, validateSync } from 'class-validator';
+import {
+  IsEnum,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+  validateSync,
+} from 'class-validator';
 
 enum Environment {
   Development = 'development',
@@ -19,6 +28,19 @@ class EnvironmentVariables {
   @IsString()
   @IsNotEmpty()
   DATABASE_URL!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  REDIS_HOST: string = 'localhost';
+
+  @IsInt()
+  @Min(1)
+  @Max(65535)
+  REDIS_PORT: number = 6379;
+
+  @IsOptional()
+  @IsString()
+  REDIS_PASSWORD?: string;
 }
 
 export function validate(config: Record<string, unknown>) {

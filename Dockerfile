@@ -6,7 +6,7 @@ RUN apk add --no-cache openssl
 
 FROM base AS deps
 COPY package.json package-lock.json* ./
-RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
+RUN npm install
 
 FROM base AS build
 COPY --from=deps /app/node_modules ./node_modules
@@ -23,7 +23,7 @@ COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/prisma ./prisma
 COPY docker/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+RUN sed -i 's/\r$//' /entrypoint.sh && chmod +x /entrypoint.sh
 
 EXPOSE 3000
 

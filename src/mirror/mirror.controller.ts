@@ -18,10 +18,14 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { PackageQueryDto } from '../common/dto/package-query.dto';
 import { PaginatedResponseDto, PaginationMetaDto } from '../common/dto/paginated-response.dto';
+import { ReportsService } from '../reports/reports.service';
 import { CreateMirrorDto } from './dto/create-mirror.dto';
+import { FastestMirrorsResponseDto } from './dto/fastest-mirror-response.dto';
 import { MirrorQueryDto } from './dto/mirror-query.dto';
 import { MirrorResponseDto } from './dto/mirror-response.dto';
+import { RefreshMirrorsResponseDto } from './dto/refresh-mirrors-response.dto';
 import { UpdateMirrorDto } from './dto/update-mirror.dto';
 import { MirrorService } from './mirror.service';
 
@@ -33,7 +37,24 @@ class PaginatedMirrorResponseDto {
 @ApiTags('mirrors')
 @Controller('mirrors')
 export class MirrorController {
-  constructor(private readonly mirrorService: MirrorService) {}
+  constructor(
+    private readonly mirrorService: MirrorService,
+    private readonly reportsService: ReportsService,
+  ) {}
+
+  @Get('fastest')
+  @ApiOperation({ summary: 'Get fastest mirrors ranked by performance' })
+  @ApiOkResponse({ type: FastestMirrorsResponseDto })
+  getFastest(@Query() query: PackageQueryDto): Promise<FastestMirrorsResponseDto> {
+    return this.reportsService.getFastestMirrors(query);
+  }
+
+  @Post('refresh')
+  @ApiOperation({ summary: 'Trigger mirror speed test refresh' })
+  @ApiOkResponse({ type: RefreshMirrorsResponseDto })
+  refresh(@Body() body: PackageQueryDto): Promise<RefreshMirrorsResponseDto> {
+    return this.reportsService.refreshMirrors(body);
+  }
 
   @Post()
   @ApiOperation({ summary: 'Create a mirror' })
