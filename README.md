@@ -1,7 +1,40 @@
 # Mirror Hub
 
-Production-ready NestJS backend with PostgreSQL, Prisma ORM, Docker, and Swagger documentation.
+[6/12/2026 1:36 PM] Zahra Mohammadi: # Introduction
 
+Developers often face challenges accessing global package registries due to network instability, internet restrictions, or unreliable connectivity. As a result, package manager mirrors (such as PyPI, npm, and apt mirrors) are commonly used to improve accessibility and download performance.
+
+However, mirror performance is not constant. A mirror that performs well at one time may become slow or unavailable later. Selecting the most suitable mirror therefore requires continuous monitoring and evaluation.
+
+Mirror Hub is a monitoring and ranking platform designed to help developers quickly identify the fastest and most reliable mirror for their package manager. The system continuously measures mirror availability, response time, success rate, and stability, then ranks mirrors based on a composite scoring model.
+
+Currently, Mirror Hub supports:
+
+- pip (Python)
+- npm (Node.js)
+- apt (Ubuntu/Debian)
+
+The primary goal of the platform is to provide developers with an easy and reliable way to choose the best mirror in seconds.
+[6/12/2026 1:36 PM] Zahra Mohammadi: # Key Features
+
+Mirror Hub provides the following capabilities:
+
+- Continuous monitoring of package manager mirrors
+- Support for multiple package ecosystems (pip, npm, and apt)
+- Automated hourly performance testing
+- Real-time mirror ranking based on multiple performance indicators
+- Smart scoring algorithm combining:
+  - Availability
+  - Response speed
+  - Success rate
+  - Consistency
+- One-click copy of mirror configuration commands
+- Manual refresh for instant mirror re-evaluation
+- 24-hour analytics and historical performance reports
+- Visual indicators for mirror health and reliability
+- Responsive Persian (RTL) user interface
+- Dockerized deployment for easy setup and reproducibility
+- Fully documented REST API with Swagger
 ## Tech Stack
 
 - **NestJS** 11.x — modular Node.js framework
