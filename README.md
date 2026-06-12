@@ -1,6 +1,6 @@
 # Mirror Hub
 
-[6/12/2026 1:36 PM] Zahra Mohammadi: # Introduction
+# Introduction
 
 Developers often face challenges accessing global package registries due to network instability, internet restrictions, or unreliable connectivity. As a result, package manager mirrors (such as PyPI, npm, and apt mirrors) are commonly used to improve accessibility and download performance.
 
@@ -15,7 +15,7 @@ Currently, Mirror Hub supports:
 - apt (Ubuntu/Debian)
 
 The primary goal of the platform is to provide developers with an easy and reliable way to choose the best mirror in seconds.
-[6/12/2026 1:36 PM] Zahra Mohammadi: # Key Features
+# Key Features
 
 Mirror Hub provides the following capabilities:
 
