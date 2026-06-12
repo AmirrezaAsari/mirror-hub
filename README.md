@@ -22,7 +22,7 @@ Production-ready NestJS backend with PostgreSQL, Prisma ORM, Docker, and Swagger
 
 ```bash
 cp .env.example .env
-docker-compose up
+make up
 ```
 
 The full stack will be available at:
